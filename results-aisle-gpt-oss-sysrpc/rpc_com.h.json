@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/rpc_com.h",
+  "display_name": "rpc_com.h",
+  "model": "openai/gpt-oss-20b",
+  "context": "",
+  "context_tokens": 1855,
+  "context_elapsed": 4.2,
+  "report": "```json\n[\n    {\n        \"severity\": \"HIGH\",\n        \"title\": \"Potential null pointer dereference in __RPC_GETXID macro\",\n        \"function\": \"Macro __RPC_GETXID\",\n        \"description\": \"The macro dereferences the `tv_sec` and `tv_usec` fields of a struct `timeval *now` without checking that `now` is non\u2011NULL. A malicious caller could pass a NULL pointer, causing a crash or denial\u2011of\u2011service. While the macro only returns a uint32_t value, the crash could allow local privilege escalation or service interruption on systems where RPC is enabled.\"\n    },\n    {\n        \"severity\": \"MEDIUM\",\n        \"title\": \"Unbounded string length calculation in SUN_LEN macro\",\n        \"function\": \"Macro SUN_LEN\",\n        \"description\": \"SUN_LEN(su) uses `strlen((su)->sun_path)` directly without validating that `su` is a valid pointer or that `sun_path` is null\u2011terminated within bounds. If an attacker provides a malformed sockaddr_un where `sun_path` is too long or not terminated, the macro may compute a size larger than the buffer allocated for the socket name, leading to a potential buffer overflow when the size is used elsewhere in the program.\"\n    },\n    {\n        \"severity\": \"MEDIUM\",\n        \"title\": \"Unvalidated size value returned by __rpc_get_a_size\",\n        \"function\": \"__rpc_get_a_size\",\n        \"description\": \"The function returns an unsigned int that callers presumably use as an allocation size. Since the size is derived from external input, an attacker could cause it to be very large, resulting in integer overflow or out\u2011of\u2011memory conditions. There is no evidence in this header that the return value is checked against `RPC_MAXDATASIZE` or any other bounds before allocation.\"\n    },\n    {\n        \"severity\": \"LOW\",\n        \"title\": \"Potential misuse of be\u2011presented function prototypes with unvalidated pointers\",\n        \"function\": [\n            \"__rpc_taddr2uaddr_af\",\n            \"__rpc_uaddr2taddr_af\",\n            \"__rpc_fixup_addr\",\n            \"__rpc_sockinfo2netid\",\n            \"__rpc_seman2socktype\",\n            \"__rpc_socktype2seman\",\n            \"xdr_authunix_parms\",\n            \"__xdrrec_getrec\",\n            \"__svc_clean_idle\"\n        ],\n        \"description\": \"All of the above functions accept raw pointers (e.g., `struct netbuf *`, `XDR *`, `fd_set *`) but the header does not specify any guarantees that the input pointers are valid or that the functions perform bounds or NULL checks. If an attacker can influence the arguments (for instance by forging a netbuf or XDR stream), these functions could dereference invalid pointers or read under\u2011initialized memory, leading to crashes or subtle data corruption.\"\n    }\n]\n```",
+  "prompt_tokens": 1752,
+  "completion_tokens": 1674,
+  "total_tokens": 3426,
+  "scan_elapsed": 18.9,
+  "total_elapsed": 23.2,
+  "severities": {
+    "critical": 0,
+    "high": 1,
+    "medium": 2,
+    "low": 1,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 119,
+  "chars": 4079,
+  "timestamp": "2026-05-06_173506"
+}

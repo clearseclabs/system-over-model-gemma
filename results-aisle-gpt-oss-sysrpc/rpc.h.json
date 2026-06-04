@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/rpc.h",
+  "display_name": "rpc.h",
+  "model": "openai/gpt-oss-20b",
+  "context": "",
+  "context_tokens": 1680,
+  "context_elapsed": 0.6,
+  "report": "```json\n[\n    {\n        \"severity\": \"critical\",\n        \"title\": \"Potential NULL pointer dereference in get_myaddress()\",\n        \"function\": \"int get_myaddress(struct sockaddr_in *)\",\n        \"description\": \"The prototype accepts a plain pointer without any const qualifier.  If an attacker passes a NULL pointer, the implementation is free to dereference it (e.g. memcpy, inet_ntoa) as it assumes a valid address structure.  This can cause a null\u2011pointer crash or a denial\u2011of\u2011service when the RPC library is used in privileged code.\"\n    },\n    {\n        \"severity\": \"critical\",\n        \"title\": \"Potential buffer overflow in registerrpc() callback\",\n        \"function\": \"int registerrpc(int, int, int, char *(*)(char [UDPMSGSIZE]), xdrproc_t, xdrproc_t)\",\n        \"description\": \"The user supplied callback is declared to accept a fixed\u2010size array of UDPMSGSIZE (default 8800) bytes and return a pointer to a string.  The library gives the callback a pointer to that array and expects it to be written to safely, but the prototype does not express size limits (the array decays to a pointer).  If the callback writes more than 8800 bytes, it will overwrite adjacent data on the stack or heap, leading to corruption or execution of injected code.\"\n    },\n    {\n        \"severity\": \"high\",\n        \"title\": \"Unverified return values from callrpc() user callbacks\",\n        \"function\": \"int callrpc(const char *, int, int, int, xdrproc_t, void *, xdrproc_t , void *)\",\n        \"description\": \"callrpc uses two XDR routines for request/response serialization.  If either routine fails and returns a non\u2011zero status, the library will still continue processing and may dereference the returned data structures.  An attacker sending malformed XDR payloads could trigger a failure in the xdrproc_t functions, causing an unchecked status value to propagate and potentially expose sensitive data or crash the process.\"\n    },\n    {\n        \"severity\": \"medium\",\n        \"title\": \"Integer overflow in __rpc_get_t_size()\",\n        \"function\": \"u_int __rpc_get_t_size(int, int, int)\",\n        \"description\": \"The function calculates message sizes from three integer arguments, which are potentially derived from client\u2011supplied parameters such as protocol version or object ID.  If these inputs are maliciously large, the computed size could wrap around or overflow and produce a very small value.  Subsequent memory allocation with that size could then allocate a buffer that is far smaller than needed, resulting in a write\u2011past\u2011end during serialization or deserialization.\"\n    },\n    {\n        \"severity\": \"medium\",\n        \"title\": \"Lack of bounds checking in network address conversion utilities\",\n        \"function\": \"char *taddr2uaddr(const struct netconfig *, const struct netbuf *);\",\n        \"function2\": \"struct netbuf *uaddr2taddr(const struct netconfig *, const char *);\",\n        \"description\": \"These utilities translate between transport and user addresses.  They accept raw buffers (e.g., the char * in uaddr2taddr) but the prototype does not enforce a maximum length.  If an attacker feeds an overly long string, the conversion may read beyond the supplied buffer, potentially leaking kernel memory or causing a crash in user space.\"\n    }\n]\n```",
+  "prompt_tokens": 1744,
+  "completion_tokens": 1806,
+  "total_tokens": 3550,
+  "scan_elapsed": 19.2,
+  "total_elapsed": 19.8,
+  "severities": {
+    "critical": 2,
+    "high": 1,
+    "medium": 2,
+    "low": 0,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 122,
+  "chars": 4391,
+  "timestamp": "2026-05-06_173506"
+}

@@ -1,0 +1,691 @@
+{
+  "timestamp": "2026-05-06_173506",
+  "target": "freebsd-prepatch/sys/rpc",
+  "model": "openai/gpt-oss-20b",
+  "files_scanned": 52,
+  "total_lines": 19674,
+  "wall_time_seconds": 2058.8,
+  "files_skipped": 0,
+  "critical_files": 29,
+  "high_files": 12,
+  "clean_files": 6,
+  "error_files": 1,
+  "per_file": [
+    {
+      "file": "rpcsec_gss/rpcsec_gss_conf.c",
+      "lines": 162,
+      "severities": {
+        "critical": 4,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 37.1
+    },
+    {
+      "file": "rpcb_clnt.h",
+      "lines": 88,
+      "severities": {
+        "critical": 2,
+        "high": 5,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 66.3
+    },
+    {
+      "file": "svc_dg.c",
+      "lines": 297,
+      "severities": {
+        "critical": 2,
+        "high": 3,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 55.2
+    },
+    {
+      "file": "auth_unix.c",
+      "lines": 372,
+      "severities": {
+        "critical": 2,
+        "high": 3,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 19.8
+    },
+    {
+      "file": "clnt_rc.c",
+      "lines": 592,
+      "severities": {
+        "critical": 2,
+        "high": 2,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 46.8
+    },
+    {
+      "file": "rpcsec_gss/rpcsec_gss.c",
+      "lines": 1215,
+      "severities": {
+        "critical": 2,
+        "high": 2,
+        "medium": 2,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 68.0
+    },
+    {
+      "file": "rpc.h",
+      "lines": 122,
+      "severities": {
+        "critical": 2,
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 19.8
+    },
+    {
+      "file": "rpcsec_tls/rpctls_impl.c",
+      "lines": 544,
+      "severities": {
+        "critical": 2,
+        "high": 0,
+        "medium": 3,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 80.5
+    },
+    {
+      "file": "rpcsec_gss/rpcsec_gss_int.h",
+      "lines": 101,
+      "severities": {
+        "critical": 1,
+        "high": 2,
+        "medium": 3,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 28.2
+    },
+    {
+      "file": "replay.c",
+      "lines": 255,
+      "severities": {
+        "critical": 1,
+        "high": 2,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 51.8
+    },
+    {
+      "file": "rpcsec_gss.h",
+      "lines": 489,
+      "severities": {
+        "critical": 1,
+        "high": 2,
+        "medium": 2,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 33.4
+    },
+    {
+      "file": "rpcb_prot.h",
+      "lines": 576,
+      "severities": {
+        "critical": 1,
+        "high": 2,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 98.8
+    },
+    {
+      "file": "clnt_dg.c",
+      "lines": 1148,
+      "severities": {
+        "critical": 1,
+        "high": 2,
+        "medium": 1,
+        "low": 2,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 84.1
+    },
+    {
+      "file": "svc_generic.c",
+      "lines": 229,
+      "severities": {
+        "critical": 1,
+        "high": 2,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 61.6
+    },
+    {
+      "file": "rpc_generic.c",
+      "lines": 975,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 3,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 157.3
+    },
+    {
+      "file": "rpcsec_gss/rpcsec_gss_prot.c",
+      "lines": 373,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 3,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 139.3
+    },
+    {
+      "file": "svc_auth.h",
+      "lines": 76,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 2,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 74.2
+    },
+    {
+      "file": "rpcsec_gss/svc_rpcsec_gss.c",
+      "lines": 1715,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 2,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 55.9
+    },
+    {
+      "file": "clnt.h",
+      "lines": 447,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 25.3
+    },
+    {
+      "file": "clnt_bck.c",
+      "lines": 610,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 84.8
+    },
+    {
+      "file": "getnetconfig.c",
+      "lines": 137,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 2,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 23.5
+    },
+    {
+      "file": "clnt_nl.c",
+      "lines": 521,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 87.5
+    },
+    {
+      "file": "rpcb_clnt.c",
+      "lines": 170,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 37.6
+    },
+    {
+      "file": "svc_auth_unix.c",
+      "lines": 143,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 62.0
+    },
+    {
+      "file": "svc_vc.c",
+      "lines": 1185,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 149.1
+    },
+    {
+      "file": "rpcsec_tls/auth_tls.c",
+      "lines": 165,
+      "severities": {
+        "critical": 1,
+        "high": 1,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 31.6
+    },
+    {
+      "file": "rpc_callmsg.c",
+      "lines": 195,
+      "severities": {
+        "critical": 1,
+        "high": 0,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 64.9
+    },
+    {
+      "file": "pmap_prot.h",
+      "lines": 104,
+      "severities": {
+        "critical": 1,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 38.3
+    },
+    {
+      "file": "rpc_msg.h",
+      "lines": 211,
+      "severities": {
+        "critical": 1,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 94.5
+    },
+    {
+      "file": "rpcm_subs.h",
+      "lines": 128,
+      "severities": {
+        "critical": 0,
+        "high": 2,
+        "medium": 3,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 96.3
+    },
+    {
+      "file": "clnt_vc.c",
+      "lines": 1301,
+      "severities": {
+        "critical": 0,
+        "high": 2,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 184.9
+    },
+    {
+      "file": "rpcsec_tls/rpctlssd.x",
+      "lines": 69,
+      "severities": {
+        "critical": 0,
+        "high": 2,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 16.2
+    },
+    {
+      "file": "xdr.h",
+      "lines": 383,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 4,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 118.1
+    },
+    {
+      "file": "svc_auth.c",
+      "lines": 226,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 3,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 62.9
+    },
+    {
+      "file": "rpc_com.h",
+      "lines": 119,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 2,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 23.2
+    },
+    {
+      "file": "svc.c",
+      "lines": 1498,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 45.2
+    },
+    {
+      "file": "rpcsec_tls/rpctlscd.x",
+      "lines": 69,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 2,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 64.1
+    },
+    {
+      "file": "rpcb_prot.c",
+      "lines": 239,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 1,
+        "low": 1,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 48.6
+    },
+    {
+      "file": "rpcsec_gss/rpcsec_gss_misc.c",
+      "lines": 52,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 18.8
+    },
+    {
+      "file": "krpc.h",
+      "lines": 141,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 18.9
+    },
+    {
+      "file": "rpc_prot.c",
+      "lines": 366,
+      "severities": {
+        "critical": 0,
+        "high": 1,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 60.2
+    },
+    {
+      "file": "svc.h",
+      "lines": 631,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 7,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 47.7
+    },
+    {
+      "file": "nettype.h",
+      "lines": 68,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 5,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 65.2
+    },
+    {
+      "file": "authunix_prot.c",
+      "lines": 145,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 2,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 40.3
+    },
+    {
+      "file": "rpcsec_tls.h",
+      "lines": 85,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 1,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 46.3
+    },
+    {
+      "file": "auth_none.c",
+      "lines": 149,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 29.4
+    },
+    {
+      "file": "auth.h",
+      "lines": 368,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "error",
+      "elapsed": 0
+    },
+    {
+      "file": "clnt_nl.h",
+      "lines": 42,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 64.4
+    },
+    {
+      "file": "clnt_stat.h",
+      "lines": 80,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 32.2
+    },
+    {
+      "file": "netconfig.h",
+      "lines": 98,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 34.8
+    },
+    {
+      "file": "replay.h",
+      "lines": 85,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 5.2
+    },
+    {
+      "file": "types.h",
+      "lines": 115,
+      "severities": {
+        "critical": 0,
+        "high": 0,
+        "medium": 0,
+        "low": 0,
+        "informational": 0
+      },
+      "status": "ok",
+      "elapsed": 16.1
+    }
+  ]
+}

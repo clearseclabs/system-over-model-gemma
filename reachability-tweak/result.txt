@@ -1,0 +1,38 @@
+reachability-strict arbiter (THE TWEAK) on 30 Run-1 auto-VALID findings | model=google/gemma-4-31b-it | 10 parallel
+
+[VULN-003_clnt_dg.c                  ] INVALID  src=clnt_dg.c                      entry=NONE
+[VULN-010_replay.c                   ] INVALID  src=replay.c                       entry=NONE
+[VULN-005_clnt_rc.c                  ] INVALID  src=clnt_rc.c                      entry=NONE
+[VULN-004_clnt_nl.c                  ] INVALID  src=clnt_nl.c                      entry=NONE
+[VULN-009_replay.c                   ] INVALID  src=replay.c                       entry=NONE
+[VULN-002_clnt_dg.c                  ] INVALID  src=clnt_dg.c                      entry=NONE
+[VULN-007_clnt_vc.c                  ] INVALID  src=clnt_vc.c                      entry=NONE
+[VULN-001_auth_unix.c                ] INVALID  src=auth_unix.c                    entry=NONE
+[VULN-011_replay.c                   ] INVALID  src=replay.c                       entry=NONE
+[VULN-014_rpcb_prot.c                ] INVALID  src=rpcb_prot.c                    entry=NONE
+[VULN-013_rpc_callmsg.c              ] INVALID  src=rpc_callmsg.c                  entry=NONE
+[VULN-006_clnt_rc.c                  ] INVALID  src=clnt_rc.c                      entry=NONE
+[VULN-012_rpc_callmsg.c              ] VALID    src=rpc_callmsg.c                  entry=Network packet -> RPC server (e.g. nfsd/rpcbind)
+[VULN-016_svc_vc.c                   ] INVALID  src=svc_vc.c                       entry=NONE
+[VULN-019_rpcsec_gss_rpcsec_gss_prot.c] INVALID  src=rpcsec_gss/rpcsec_gss_prot.c   entry=NONE
+[VULN-021_rpcsec_tls_rpctls_impl.c   ] VALID    src=rpcsec_tls/rpctls_impl.c       entry=External network packet (RPC NULL request with A
+[VULN-008_clnt_vc.c                  ] INVALID  src=clnt_vc.c                      entry=NONE
+[VULN-023_netconfig.h                ] INVALID  src=netconfig.h                    entry=NONE
+[VULN-020_rpcsec_tls_rpctls_impl.c   ] INVALID  src=rpcsec_tls/rpctls_impl.c       entry=NONE
+[VULN-017_rpcsec_gss_rpcsec_gss.c    ] INVALID  src=rpcsec_gss/rpcsec_gss.c        entry=NONE
+[VULN-015_rpcb_prot.c                ] INVALID  src=rpcb_prot.c                    entry=NONE
+[VULN-025_rpc_generic.c              ] INVALID  src=rpc_generic.c                  entry=NONE
+[VULN-024_replay.c                   ] INVALID  src=replay.c                       entry=NONE
+[VULN-030_rpcsec_gss_rpcsec_gss_conf.c] INVALID  src=rpcsec_gss/rpcsec_gss_conf.c   entry=NONE
+[VULN-029_xdr.h                      ] INVALID  src=xdr.h                          entry=NONE
+[VULN-027_svc_auth_unix.c            ] INVALID  src=svc_auth_unix.c                entry=NONE
+[VULN-026_svc_generic.c              ] INVALID  src=svc_generic.c                  entry=NONE
+[VULN-028_rpc_generic.c              ] INVALID  src=rpc_generic.c                  entry=NONE
+[VULN-022_rpcsec_tls_rpctls_impl.c   ] INVALID  src=rpcsec_tls/rpctls_impl.c       entry=NONE
+[VULN-018_rpcsec_gss_rpcsec_gss_prot.c] INVALID  src=rpcsec_gss/rpcsec_gss_prot.c   entry=NONE
+
+=== TWEAK RESULT: 30 auto-'VALID' findings -> arbiter keeps 2 VALID, rejects 28 INVALID, 0 uncertain/err ===
+SURVIVORS (still VALID):
+  VULN-012_rpc_callmsg.c (rpc_callmsg.c): xdr_callmsg allocates memory via mem_alloc for cb_cred and cb_verf based on attacker-controlled oa_length. If subsequent decoding (e.g., xdr
+  VULN-021_rpcsec_tls_rpctls_impl.c (rpcsec_tls/rpctls_impl.c): The kernel calls a userspace daemon (rpctlssd) via RPC and blindly uses the returned `res.gid.gid_len` to allocate kernel memory via `mem_al
+DONE

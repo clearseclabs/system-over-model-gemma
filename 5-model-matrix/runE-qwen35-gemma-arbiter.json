@@ -1,0 +1,50 @@
+{
+  "target": "scaffolding/target/svc_rpc_gss_validate.c",
+  "stages": {
+    "context": {
+      "usage": {
+        "completion_tokens": 1505,
+        "prompt_tokens": 1762,
+        "total_tokens": 3267,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 3,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "content": "**1. PURPOSE**  \nThis file implements the RPC\u2011GSS authentication validation routine (`svc_rpc_gss_validate`) that verifies a client\u2019s message integrity by reconstructing the RPC header, computing an XDR\u2011encoded buffer, and calling `gss_verify_mic`.\n\n---\n\n**2. ENTRY POINTS**  \n| Function | Caller context | Notes |\n|----------|----------------|-------|\n| `svc_rpc_gss_validate` | Internal to the RPC\u2011GSS server module. It is invoked by higher\u2011level RPC dispatch code when a client request arrives and the authentication flavor is GSS. | The function receives data that ultimately originates from a network packet (the `struct rpc_msg` supplied by the RPC stack). It is therefore reachable from untrusted network input. No other external callers are visible in this translation unit. |\n\n---\n\n**3. TRUST BOUNDARIES**  \n| Source | Type of data | Attacker\u2011controlled? | How it crosses into this file |\n|--------|--------------|----------------------|--------------------------------|\n| `msg->rm_call.cb_cred` (`opaque_auth *oa`) | `oa_length`, `oa_base` (pointer to credential bytes) | Yes \u2013 the entire credential blob is supplied by the client over the network. | Passed into `svc_rpc_gss_validate` via the `struct rpc_msg *msg`. |\n| `msg->rm_call.cb_verf.oa_base` / `.oa_length` | Checksum bytes and length | Yes \u2013 the verifier is part of the client\u2019s RPC message. | Same as above. |\n| `msg->rm_xid`, `rm_direction`, etc. | Various integer fields of the RPC message header | Yes \u2013 all come from the network packet. | Passed in `msg`. |\n| `client->cl_ctx` | GSS context handle | No \u2013 created by the server during a prior handshake. |\n| `gcproc` (RPCSEC_GSS procedure) | Integer enum value | No \u2013 chosen by the server\u2019s dispatch logic. |\n\n---\n\n**4. BUFFERS**  \n| Buffer | Size / Type | Bounded? | Who writes it |\n|--------|-------------|----------|---------------|\n| `rpchdr` (local stack array) | 128 bytes (`int32_t rpchdr[32]`) | Fixed size, bounded by compile\u2011time constant. | Written by this function (`memset`, `IXDR_PUT_*` macros, and a conditional `memcpy`). |\n| `buf` (pointer into `rpchdr`) | Points within `rpchdr`; advances as data is serialized. | Implicitly bounded by the size of `rpchdr`. | Updated by this function during header reconstruction. |\n| `rpcbuf` (`gss_buffer_desc`) | Holds pointer to `rpchdr` and computed length. | Length derived from `buf - rpchdr`. | Set by this function. |\n| `checksum` (`gss_buffer_desc`) | Points to verifier bytes from the RPC message. | Length comes from `msg->rm_call.cb_verf.oa_length`. | Set by this function; data originates from the network. |\n| `msg->rm_call.cb_cred` and `.cb_verf` | Provided by the RPC stack; not allocated here. | `oa_length` and `verf.oa_length` are network\u2011controlled. | Written by the RPC stack when parsing the incoming packet. |\n\n---\n\n**5. INTEGER TYPES TO WATCH**  \n| Location | Concern |\n|----------|---------|\n| `oa->oa_length` (`u_int`) vs. comparison with `sizeof(rpchdr) - 8 * BYTES_PER_XDR_UNIT` (both `size_t`/`int`) | Signed/unsigned mix; potential for unsigned wrap if `oa_length` is very large. |\n| `rpchdr` length calculation: `rpcbuf.length = (u_char *)buf - (u_char *)rpchdr;` | Subtraction of two `char *`; result is a signed `ptrdiff_t`. The value is later used as the length field of a GSS buffer, which expects an unsigned `size_t`. |\n| `RNDUP(oa->oa_length) / sizeof(int32_t)` | Division of an unsigned length by 4; if `oa_length` is not a multiple of 4, rounding may produce an off\u2011by\u2011one in the buffer index. |\n| `IXDR_PUT_LONG` and `IXDR_PUT_ENUM` macros | They advance the `buf` pointer by one 32\u2011bit slot each; no explicit bounds check beyond the initial length guard. |\n| `client->cl_state` assignment | No arithmetic, but state transition logic depends on earlier checks. |\n\n---\n\n**6. ASSUMPTIONS**  \n| Assumption | Where it is relied on |\n|------------|----------------------|\n| The RPC message header fields (`rm_xid`, `rm_direction`, etc.) are well\u2011formed and within valid ranges. | No re\u2011validation in this function; the RPC stack is assumed to have parsed them correctly. |\n| `oa->oa_length` accurately reflects the size of `oa_base`. | The length guard at line\u202f46 assumes this; no separate consistency check. |\n| `oa->oa_base` points to a buffer of at least `oa_length` bytes. | The subsequent `memcpy` (line\u202f64) assumes this; no bounds check beyond the length guard. |\n| `msg->rm_call.cb_verf` contains a valid GSS MIC of the reconstructed buffer. | The function trusts that `gss_verify_mic` will detect any tampering; no manual verification of verifier length against expected sizes. |\n| `client->cl_ctx` is a valid, non\u2011NULL GSS context handle. | Used directly in `gss_verify_mic`. |\n| The caller ensures that the RPC message is not a maliciously crafted packet that could overflow `rpchdr`. | The length guard at line\u202f46 is the only protection. |\n\n---\n\n**7. OPEN QUESTIONS**  \n| Symbol | What is unknown / needs external context |\n|--------|-------------------------------------------|\n| `BYTES_PER_XDR_UNIT` | Defined elsewhere; assumed to be 4. |\n| `RNDUP(x)` macro | How rounding is performed; whether it rounds up to the nearest multiple of 4. |\n| `IXDR_PUT_LONG`, `IXDR_PUT_ENUM` | Implementation details; whether they perform bounds checks or just write to the buffer. |\n| `gss_verify_mic` | Return values and side effects on the GSS context; whether it can modify `client->cl_ctx`. |\n| `rpc_gss_log_debug`, `rpc_gss_log_status` | Logging side effects; not relevant to security but may influence observable behavior. |\n| `CLIENT_STALE` | Value and effect on the client state machine; not defined in this file. |\n| `RPCSEC_GSS_DESTROY` | Enum value for the destroy procedure; its numeric value is not shown. |\n\nThese items would need to be examined in their respective headers or modules to fully assess the security posture of `svc_rpc_gss_validate`."
+    },
+    "vuln_scan": {
+      "usage": {
+        "completion_tokens": 25000,
+        "prompt_tokens": 3668,
+        "total_tokens": 28668,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 24999,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "content": ""
+    },
+    "triage": {
+      "usage": {
+        "completion_tokens": 6000,
+        "prompt_tokens": 2030,
+        "total_tokens": 8030,
+        "completion_tokens_details": {
+          "accepted_prediction_tokens": null,
+          "audio_tokens": null,
+          "reasoning_tokens": 5997,
+          "rejected_prediction_tokens": null
+        },
+        "prompt_tokens_details": null
+      },
+      "content": ""
+    }
+  }
+}

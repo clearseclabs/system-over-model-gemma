@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/rpcsec_gss/rpcsec_gss.c",
+  "display_name": "rpcsec_gss/rpcsec_gss.c",
+  "model": "openai/gpt-oss-20b",
+  "context": "",
+  "context_tokens": 10919,
+  "context_elapsed": 4.7,
+  "report": "**Answer**\n\nAfter a thorough review of `example/net/parser.c` and `rpcsec_gss/rpcsec_gss.c`, the following potential zero\u2011day vulnerabilities have been identified.  \nAll findings are ranked by their severity, and include the function name, title and a short description.\n\n```json\n[\n  {\n    \"severity\": \"Critical\",\n    \"title\": \"Unbounded buffer overflow on credential serialization\",\n    \"function\": \"rpc_gss_marshal\",\n    \"description\": \"The function serializes a `rpc_gss_cred` into a fixed\u2011size stack buffer `credbuf[MAX_AUTH_BYTES]`.  It does not verify that the serialized size (`XDR_GETPOS(&tmpxdrs)`) fits within `MAX_AUTH_BYTES`. An attacker, via a malicious GSS handle supplied by the server during context initialization, can cause `gsscred` to contain an arbitrarily large buffer, leading to a stack overflow, crash or memory corruption.\"\n  },\n  {\n    \"severity\": \"Critical\",\n    \"title\": \"NULL pointer dereference caused by unchecked strdup failure\",\n    \"function\": \"rpc_gss_seccreate_int\",\n    \"description\": \"The principal string is duplicated using `strdup(principal, M_RPC)` without checking for a NULL return.  If duplication fails, `gd->gd_principal` will be NULL.  Subsequent code (e.g., `rpc_gss_secfind` and later `strcmp(gd->gd_principal, principal)`) will dereference this NULL pointer, potentially crashing the kernel or leaking stack contents.\"\n  },\n  {\n    \"severity\": \"High\",\n    \"title\": \"Potential memory exhaustion via oversized GSS handle\",\n    \"function\": \"rpc_gss_init\",\n    \"description\": \"During context negotiation the client accepts a `gr.gr_handle` buffer from the server.  The length of this buffer is not bounded.  An attacker can send a handle of gigabyte size, forcing the client to attempt a huge kernel allocation via XDR, which either fails (crash/ denial\u2011of\u2011service) or allocates excessive memory, exhausting resources.\"\n  },\n  {\n    \"severity\": \"High\",\n    \"title\": \"Use\u2011after\u2011free on gd->gd_verf during validation\",\n    \"function\": \"rpc_gss_validate\",\n    \"description\": \"`rpc_gss_validate` reads `gd->gd_verf` without acquiring `gd->gd_lock`.  While this function runs, another thread may call `rpc_gss_destroy_context`, which frees `gd->gd_verf`.  This race can lead to a dangling pointer reference, causing a crash or leakage of verifier bytes.\"\n  },\n  {\n    \"severity\": \"Medium\",\n    \"title\": \"Unchecked XDR_INLINE return value\",\n    \"function\": \"rpc_gss_marshal\",\n    \"description\": \"The code assigns `rpcbuf.value = XDR_INLINE(xdrs, rpcbuf.length)` without checking if the result is NULL.  If the XDR stream is not contiguous, `XDR_INLINE` returns NULL and `rpcbuf.value` becomes NULL while `rpcbuf.length` remains non\u2011zero.  Passing this to `gss_get_mic` can lead to a NULL\u2011pointer dereference inside the GSS library, potentially causing a crash.\"\n  },\n  {\n    \"severity\": \"Medium\",\n    \"title\": \"Missing bounds check on GSS credential size during context creation\",\n    \"function\": \"rpc_gss_seccreate_int\",\n    \"description\": \"The code copies the returned server credential handle (`gr.gr_handle`) into `gd->gd_cred.gc_handle` without verifying the size of the buffer.  An attacker can supply an unusually large handle, leading to excessive memory use or a potential buffer overflow in subsequent operations that process `gd->gd_cred.gc_handle`.\"\n  },\n  {\n    \"severity\": \"Low\",\n    \"title\": \"Potential lack of reference count increment on `gd->gd_ucred` duplication\",\n    \"function\": \"rpc_gss_seccreate_int\",\n    \"description\": \"The `crdup(cred)` call is performed without checking for failure.  If the duplicate fails, the authentication object will later reference a NULL credential pointer, leading to a kernel crash.\"\n  }\n]\n```\n\nThese findings represent the most plausible vectors for zero\u2011day exploitation in the analyzed code base. The critical issues (buffer overflow, NULL dereference, and memory exhaustion) should be addressed immediately in order to mitigate potential remote crashes or denial\u2011of\u2011service attacks.",
+  "prompt_tokens": 11063,
+  "completion_tokens": 6206,
+  "total_tokens": 17269,
+  "scan_elapsed": 63.3,
+  "total_elapsed": 68.0,
+  "severities": {
+    "critical": 2,
+    "high": 2,
+    "medium": 2,
+    "low": 1,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 1215,
+  "chars": 33157,
+  "timestamp": "2026-05-06_173506"
+}

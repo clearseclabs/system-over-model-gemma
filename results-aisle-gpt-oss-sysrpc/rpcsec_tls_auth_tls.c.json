@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/rpcsec_tls/auth_tls.c",
+  "display_name": "rpcsec_tls/auth_tls.c",
+  "model": "openai/gpt-oss-20b",
+  "context": "",
+  "context_tokens": 1824,
+  "context_elapsed": 9.0,
+  "report": "```json\n[\n    {\n        \"severity\": \"critical\",\n        \"title\": \"Authentication bypass via missing verifier\",\n        \"function\": \"authtls_validate\",\n        \"description\": \"The verifier check accepts an empty verifier (opaque == NULL) as valid.  An attacker can omit the STARTTLS verifier entirely, causing the server to treat the connection as authenticated without TLS negotiation.\"\n    },\n    {\n        \"severity\": \"high\",\n        \"title\": \"Potential stack/heap buffer overflow in auth initialization\",\n        \"function\": \"authtls_init\",\n        \"description\": \"The function marshals two opaque_auth structures into a fixed 20\u2011byte buffer using XDR.  If the encoded data exceeds MAX_MARSHAL_SIZE, XDR_PUTBYTES will fail but the code ignores the failure and stores an incorrect mcnt value.  Subsequent calls to authtls_marshal will copy mcnt bytes regardless of the buffer size, potentially overflowing the static mclient array on the stack.\"\n    },\n    {\n        \"severity\": \"medium\",\n        \"title\": \"Unchecked NULL pointer dereference in marshal\",\n        \"function\": \"authtls_marshal\",\n        \"description\": \"The function assumes the passed AUTH pointer is non\u2011NULL and uses KASSERT, which in a kernel context will panic if the caller passes a NULL client.  If an attacker can obtain a code path that calls this function with a NULL client, it would result in an OS crash or denial of service.\"\n    },\n    {\n        \"severity\": \"low\",\n        \"title\": \"Race condition on global mclient buffer (read\u2011only)\",\n        \"function\": \"authtls_marshal\",\n        \"description\": \"Multiple threads call authtls_marshal concurrently to read from the same global buffer.  Since the buffer is only read after being initialized once at boot, concurrent reads are safe, but the design is fragile if future modifications introduced writer paths.  This does not present an immediate security risk in the current code.\"\n    }\n]\n```\n",
+  "prompt_tokens": 1963,
+  "completion_tokens": 2013,
+  "total_tokens": 3976,
+  "scan_elapsed": 22.5,
+  "total_elapsed": 31.6,
+  "severities": {
+    "critical": 1,
+    "high": 1,
+    "medium": 1,
+    "low": 1,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 165,
+  "chars": 4704,
+  "timestamp": "2026-05-06_173506"
+}

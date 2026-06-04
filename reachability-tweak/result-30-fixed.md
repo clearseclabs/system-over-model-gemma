@@ -1,0 +1,62 @@
+# Reachability filter — 5 kept / 25 rejected of 30 (model: google/gemma-4-31b-it)
+
+- **INVALID** `VULN-001_auth_unix.c.md` (auth_unix.c) — entry: NONE
+  - The `verf` pointer is an `opaque_auth` structure decoded by `xdr_opaque_auth` before reaching `authunix_validate`. In the XDR implementation, if the network packet specifies a length > 0, `oa_base` is
+- **INVALID** `VULN-002_clnt_dg.c.md` (clnt_dg.c) — entry: NONE
+  - The function `clnt_dg_control` is a private internal handler for the RPC client library. It is not exposed via any syscall or network interface; it is only reachable by a local process that already po
+- **INVALID** `VULN-003_clnt_dg.c.md` (clnt_dg.c) — entry: NONE
+  - cu_cwnd is internal kernel state initialized to MAXCWND/2 and bounded by internal logic, not attacker-controlled. XID predictability is a protocol design issue, not a memory safety or reachability bug
+- **INVALID** `VULN-004_clnt_nl.c.md` (clnt_nl.c) — entry: NONE
+  - The vulnerability resides in clnt_nl_destroy, which is called only when a CLIENT object is destroyed. This is a lifecycle management function for internal kernel RPC clients; there is no path for an e
+- **INVALID** `VULN-005_clnt_rc.c.md` (clnt_rc.c) — entry: NONE
+  - The function clnt_reconnect_control is a handler for internal RPC client operations; there is no evidence in the provided code or project context of a syscall or IOCTL that allows an external attacker
+- **INVALID** `VULN-006_clnt_rc.c.md` (clnt_rc.c) — entry: NONE
+  - clnt_reconnect_freeres is part of a function pointer table (clnt_reconnect_ops) used by the RPC layer; it is only invoked to free a result obtained from a successful call, and the current implementati
+- **INVALID** `VULN-007_clnt_vc.c.md` (clnt_vc.c) — entry: NONE
+  - The provided source code is truncated and does not contain the implementation of clnt_vc_soupcall. Without the function body, the reachability of the sink and the attacker's control over the length ca
+- **VALID** `VULN-008_clnt_vc.c.md` (clnt_vc.c) — entry: Network packet -> soreceive() -> clnt_vc_soupcall()
+  - clnt_vc_soupcall() reads a 31-bit value from the network stream to set ct->ct_record_resid, and then continuously appends mbufs to ct->ct_record until that length is met, allowing a remote attacker to
+- **INVALID** `VULN-009_replay.c.md` (replay.c) — entry: NONE
+  - The `addr` pointer passed to `replay_alloc` originates from the kernel's networking stack (e.g., the peer address of an incoming socket). The `sa_len` field is managed by the kernel's socket layer and
+- **INVALID** `VULN-010_replay.c.md` (replay.c) — entry: NONE
+  - The 'infinite loop' claim is logically refuted by the 'do-while' condition 'while (rce && ...)'. The resulting cache exhaustion only leads to 'replay_alloc' returning NULL, which is handled gracefully
+- **INVALID** `VULN-011_replay.c.md` (replay.c) — entry: NONE
+  - The provided GREP results show no callers for the affected functions, and the provided code snippet lacks the necessary context to establish a concrete reachability path from an external entry point t
+- **INVALID** `VULN-012_rpc_callmsg.c.md` (rpc_callmsg.c) — entry: NONE
+  - The provided GREP results show no callers for xdr_callmsg, and without evidence of it being reachable from a network interface or syscall in the provided context, it is treated as dead code or interna
+- **VALID** `VULN-013_rpc_callmsg.c.md` (rpc_callmsg.c) — entry: Network packet -> RPC server dispatch -> xdr_callmsg()
+  - The function allocates memory for `oa->oa_base` via `mem_alloc` based on attacker-controlled `oa_length` from the XDR stream. If subsequent decoding (e.g., `xdr_opaque` or `cb_verf` processing) fails,
+- **INVALID** `VULN-014_rpcb_prot.c.md` (rpcb_prot.c) — entry: NONE
+  - The provided code contains the XDR decoding logic, but no callers are present in the provided snippet, and no reachability path to a network-facing RPC service is established.
+- **INVALID** `VULN-015_rpcb_prot.c.md` (rpcb_prot.c) — entry: NONE
+  - The provided GREP results show no callers for the cited functions, and since they are XDR decoding routines, they must be called by the RPC framework. Without confirmation of a reachable path from a n
+- **VALID** `VULN-016_svc_vc.c.md` (svc_vc.c) — entry: Network packet -> svc_vc_recv -> svc_vc_process_pending
+  - The function `svc_vc_process_pending` reads a 31-bit `resid` directly from the network header and accumulates mbufs into `cd->mreq` until that count is met, with no maximum bound, enabling remote kern
+- **INVALID** `VULN-017_rpcsec_gss_rpcsec_gss.c.md` (rpcsec_gss/rpcsec_gss.c) — entry: NONE
+  - The `rpc_gss_validate` function is part of the client-side RPCSEC_GSS implementation (acting as a client processing a server's response). The `opaque_auth` structure's `oa_length` is derived from the 
+- **VALID** `VULN-018_rpcsec_gss_rpcsec_gss_prot.c.md` (rpcsec_gss/rpcsec_gss_prot.c) — entry: Network Packet -> xdr_rpc_gss_unwrap_data
+  - `cklen` is read from a network packet via `get_uint32` and passed to `m_pullup` without production-level bounds checking; `KASSERT` is omitted in release builds.
+- **INVALID** `VULN-019_rpcsec_gss_rpcsec_gss_prot.c.md` (rpcsec_gss/rpcsec_gss_prot.c) — entry: NONE
+  - The provided GREP results show no callers for the functions in this file, and the source code is a protocol implementation without a visible link to the network stack. Without confirmation of a concre
+- **INVALID** `VULN-020_rpcsec_tls_rpctls_impl.c.md` (rpcsec_tls/rpctls_impl.c) — entry: NONE
+  - The sink depends on data returned from the 'rpctlssd' userspace daemon. Since the daemon must be compromised or run by a privileged actor to provide malicious input to the kernel, this is not external
+- **VALID** `VULN-021_rpcsec_tls_rpctls_impl.c.md` (rpcsec_tls/rpctls_impl.c) — entry: Network Packet (RPC NULL request with AUTH_TLS) -> _svcauth_
+  - The kernel uses `res.gid.gid_len` from the `rpctlssd` daemon response to allocate memory via `mem_alloc` without bounds checking. A compromised daemon can provide a massive `gid_len`, leading to kerne
+- **INVALID** `VULN-022_rpcsec_tls_rpctls_impl.c.md` (rpcsec_tls/rpctls_impl.c) — entry: NONE
+  - The sink in sys_rpctls_syscall is protected by priv_check(td, PRIV_NFS_DAEMON), meaning only a process with NFS daemon privileges can trigger the race, precluding external attacker reachability.
+- **INVALID** `VULN-023_netconfig.h.md` (netconfig.h) — entry: NONE
+  - The finding is based on a header file containing function declarations. No implementation is provided, and no concrete path from an external entry point to a vulnerable sink is established.
+- **INVALID** `VULN-024_replay.c.md` (replay.c) — entry: NONE
+  - The `addr` pointer passed to `replay_alloc` originates from the kernel's network stack (populating the `sockaddr` from transport layer headers), making `sa_len` a kernel-determined value based on the 
+- **INVALID** `VULN-025_rpc_generic.c.md` (rpc_generic.c) — entry: NONE
+  - The findings describe multiple issues, but the primary heap over-read in __rpc_taddr2uaddr_af depends on sun->sun_len. Based on the provided source, this function is only called via taddr2uaddr, which
+- **INVALID** `VULN-026_svc_generic.c.md` (svc_generic.c) — entry: NONE
+  - The functions svc_tp_create and svc_tli_create are used for initializing kernel RPC services (e.g., during boot or module load) and are not reachable from untrusted userspace or network inputs.
+- **INVALID** `VULN-027_svc_auth_unix.c.md` (svc_auth_unix.c) — entry: NONE
+  - The `rqst->rq_clntcred` pointer is initialized during the request setup phase of the RPC server (typically in `svc_req_create` or similar framework logic) before the authentication handler is called. 
+- **INVALID** `VULN-028_rpc_generic.c.md` (rpc_generic.c) — entry: NONE
+  - The function __rpc_taddr2uaddr_af is called via taddr2uaddr, which in turn depends on __rpc_nconf2sockinfo. This chain is used for converting internal network configurations to strings; the input netb
+- **INVALID** `VULN-029_xdr.h.md` (xdr.h) — entry: NONE
+  - The reported issues are misuse cases of a header API. IXDR_GET macros rely on the caller's XDR_INLINE length check, and RNDUP is a standard alignment macro; no specific vulnerable implementation path 
+- **INVALID** `VULN-030_rpcsec_gss_rpcsec_gss_conf.c.md` (rpcsec_gss/rpcsec_gss_conf.c) — entry: NONE
+  - The function rpc_gss_qop_to_num is not called anywhere in the codebase, making it dead code.

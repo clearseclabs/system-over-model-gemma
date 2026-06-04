@@ -1,0 +1,24 @@
+reachability filter: 21 findings | model=openai/gpt-oss-20b | 8 parallel
+  [VULN-003_clnt_dg.c.md                 ] INVALID  clnt_dg.c                    NONE
+  [VULN-001_auth_unix.c.md               ] INVALID  auth_unix.c                  NONE
+  [VULN-002_getnetconfig.c.md            ] INVALID  getnetconfig.c               NONE
+  [VULN-004_rpcsec_tls.h.md              ] VALID    rpcsec_tls.h                 rpc_auth_tls (external RPC credential parsing) → rpctls_conn
+  [VULN-007_rpcsec_gss_rpcsec_gss_prot.c.md] VALID    rpcsec_gss/rpcsec_gss_prot.c RPCSEC GSS authentication data carried in a UDP/TCP packet p
+  [VULN-006_rpcsec_tls_rpctlssd.x.md     ] INVALID  rpcsec_tls/rpctlssd.x        NONE
+  [VULN-008_rpcsec_gss_rpcsec_gss_prot.c.md] VALID    rpcsec_gss/rpcsec_gss_prot.c Networked RPC packet processed by rpcsec_gss server → xdr_rp
+  [VULN-009_auth_unix.c.md               ] INVALID  auth_unix.c                  NONE
+  [VULN-005_rpcm_subs.h.md               ] INVALID  rpcm_subs.h                  NONE
+  [VULN-014_rpcb_clnt.c.md               ] INVALID  rpcb_clnt.c                  NONE
+  [VULN-016_svc_generic.c.md             ] INVALID  svc_generic.c                NONE
+  [VULN-010_clnt_rc.c.md                 ] INVALID  clnt_rc.c                    NONE
+  [VULN-018_rpcsec_gss_rpcsec_gss.c.md   ] INVALID  rpcsec_gss/rpcsec_gss.c      NONE
+  [VULN-015_svc_auth_unix.c.md           ] INVALID  svc_auth_unix.c              NONE
+  [VULN-012_rpc_callmsg.c.md             ] INVALID  rpc_callmsg.c                NONE
+  [VULN-021_rpcsec_tls_rpctls_impl.c.md  ] INVALID  rpcsec_tls/rpctls_impl.c     NONE
+  [VULN-013_clnt_vc.c.md                 ] INVALID  clnt_vc.c                    NONE
+  [VULN-020_rpcsec_tls_rpctls_impl.c.md  ] INVALID  rpcsec_tls/rpctls_impl.c     rpcsec_tls: _svcauth_rpcsec_tls invoked by a NULL RPC (AUTH_
+  [VULN-011_clnt_nl.c.md                 ] INVALID  clnt_nl.c                    NONE
+  [VULN-017_svc_generic.c.md             ] INVALID  svc_generic.c                NONE
+  [VULN-019_rpcsec_gss_rpcsec_gss.c.md   ] VALID    rpcsec_gss/rpcsec_gss.c      NFS kernel client request (non‑privileged user can send malf
+
+4 VALID kept, 17 INVALID rejected, 0 uncertain/err  ->  blog_ideas/system-over-model-gemma/reachability-tweak/gpt-oss-run2/result-gptoss-arbiter.md

@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/rpcsec_gss/rpcsec_gss_misc.c",
+  "display_name": "rpcsec_gss/rpcsec_gss_misc.c",
+  "model": "openai/gpt-oss-20b",
+  "context": "",
+  "context_tokens": 1014,
+  "context_elapsed": 6.7,
+  "report": "- **Independence of findings** \u2013 The file `rpcsec_gss_misc.c` only contains simple error\u2011handling routines.  \n  Untrusted data never reaches a buffer or a pointer\u2011arithmetic path, therefore no classic memory\u2011corruption vulnerability (e.g. buffer overflow, use\u2011after\u2011free, integer overflow) exists.  \n  Nevertheless, a few non\u2011fatal but exploitable behaviors are possible if the caller is able to influence the call parameters or the asynchronous environment.\n\n```json\n[\n    {\n        \"severity\": \"high\",\n        \"title\": \"Nul\u2011pointer Dereference in rpc_gss_get_error\",\n        \"function\": \"rpc_gss_get_error\",\n        \"description\": \"The function assumes that the caller passes a valid non\u2011NULL pointer. If an attacker can force a NULL pointer (for example by causing a remote procedure call that passes an uninitialized pointer), the dereference `*error = _rpc_gss_error;` will trigger a crash, resulting in a denial\u2011of\u2011service. This is a classic use\u2011of\u2011uninitialized or bad\u2011pointer bug, but it is not a classic buffer overflow.\"\n    },\n    {\n        \"severity\": \"medium\",\n        \"title\": \"Race Condition on Static Error State\",\n        \"function\": \"_rpc_gss_set_error / rpc_gss_get_error\",\n        \"description\": \"The static variable `_rpc_gss_error` is shared across all threads in the process. Concurrent calls to `_rpc_gss_set_error()` and `rpc_gss_get_error()` without synchronization can lead to lost updates or partially\u2011written values. While this does not lead to a memory corruption or arbitrary code execution, it can cause an attacker to observe inconsistent error information, or trigger a subtle denial\u2011of\u2011service by repeatedly clobbering the error state in a multi\u2011threaded environment.\"\n    }\n]\n```",
+  "prompt_tokens": 1125,
+  "completion_tokens": 1192,
+  "total_tokens": 2317,
+  "scan_elapsed": 12.1,
+  "total_elapsed": 18.8,
+  "severities": {
+    "critical": 0,
+    "high": 1,
+    "medium": 1,
+    "low": 0,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 52,
+  "chars": 1823,
+  "timestamp": "2026-05-06_173506"
+}

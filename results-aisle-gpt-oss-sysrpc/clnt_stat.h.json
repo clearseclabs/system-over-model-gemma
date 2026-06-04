@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/clnt_stat.h",
+  "display_name": "clnt_stat.h",
+  "model": "openai/gpt-oss-20b",
+  "context": "**Context Briefing \u2013 `clnt_stat.h`**  \n*Author: Security Research Analyst \u2013 250\u202fwords*\n\n1. **What the code does & where it sits**  \n   `clnt_stat.h` defines the `enum clnt_stat` values that a Sun RPC client library reports as status or error codes. It lives in the `rpc` subsystem, included by client\u2011side RPC wrappers (e.g., `clnt_create`, `clnt_call`). The header is part of the public API, not implementation code; it is compiled once into any client binary that uses RPC.\n\n2. **Untrusted input reaching this code**  \n   The enum itself never receives runtime input. It is only used as a return value from functions that do process untrusted data (network RPC payloads). Therefore, there is no direct data flow from user input to this header.\n\n3. **Variables/fields carrying attacker\u2011controlled data**  \n   \u2013 *None.* The enum is static. Any attacker\u2011controlled data would be in calling code, not in this header.\n\n4. **Fixed\u2011size buffers / size constants**  \n   \u2013 *None.* The header contains only constants. No arrays/buffers are declared.\n\n5. **Dangerous data flows**  \n   \u2013 *None.* No data copies or copies into fixed buffers occur here.\n\n6. **Nullable parameters**  \n   \u2013 *None.* No functions; no parameters to validate.\n\n7. **Tagged unions / variant types**  \n   \u2013 *None.* No unions or discriminated types.\n\n8. **Public vs static helpers**  \n   \u2013 Public: The enum is public. No helpers or static functions are defined in this file.\n\n9. **Likely bug classes**  \n   \u2013 *None attributable to this file.* Potentially used incorrectly elsewhere (e.g., misinterpreting values), but the header itself is safe.\n\n**Fixed numeric values**: All enum values and their numerical assignments appear directly in the source; no macros are used to compute them. For example, `RPC_SUCCESS = 0`, `RPC_CANTENCODEARGS = 1`, `RPC_CANTDECODERES = 2`, etc., directly as listed.",
+  "context_tokens": 1762,
+  "context_elapsed": 29.3,
+  "report": "[]",
+  "prompt_tokens": 1806,
+  "completion_tokens": 224,
+  "total_tokens": 2030,
+  "scan_elapsed": 2.9,
+  "total_elapsed": 32.2,
+  "severities": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 80,
+  "chars": 2063,
+  "timestamp": "2026-05-06_173506"
+}

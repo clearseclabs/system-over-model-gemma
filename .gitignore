@@ -1,0 +1,5 @@
+.env
+freebsd-prepatch/
+*.fresh.json
+__pycache__/
+*.pyc

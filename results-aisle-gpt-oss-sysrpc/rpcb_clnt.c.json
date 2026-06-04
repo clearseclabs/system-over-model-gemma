@@ -1,0 +1,25 @@
+{
+  "file": "./freebsd-prepatch/sys/rpc/rpcb_clnt.c",
+  "display_name": "rpcb_clnt.c",
+  "model": "openai/gpt-oss-20b",
+  "context": "",
+  "context_tokens": 2212,
+  "context_elapsed": 1.3,
+  "report": "```json\n[\n  {\n    \"severity\": \"critical\",\n    \"title\": \"Unvalidated pointer dereference in rpcb_set()\",\n    \"function\": \"rpcb_set\",\n    \"description\": \"The function copies the caller\u2011supplied *nconf* and *address* structures and then uses pointers from them (nconf->nc_netid and the address returned by taddr2uaddr()) without verifying that the memory is readable.  An attacker who can supply a crafted rpcb_set() call with a pointer that does not reference valid kernel memory can cause the kernel to read or free arbitrary memory, leading to a crash or arbitrary code execution.\"\n  },\n  {\n    \"severity\": \"high\",\n    \"title\": \"Improper null\u2011pointer handling of rpcb_clnt global\",\n    \"function\": \"local_rpcb / rpcb_set / rpcb_unset\",\n    \"description\": \"rpcb_clnt is initialized once at system start.  The API functions rpcb_set() and rpcb_unset() assume rpcb_clnt is non\u2011NULL and pass it directly to CLNT_CALL without checking.  If for some reason local_rpcb() has not run (e.g., during early boot or if the init sequence fails), a call from user space could dereference a NULL rpcb_clnt pointer, causing a kernel panic.\"\n  },\n  {\n    \"severity\": \"medium\",\n    \"title\": \"Race condition due to unsynchronized use of rpcb_clnt\",\n    \"function\": \"rpcb_set / rpcb_unset\",\n    \"description\": \"The global CLIENT *rpcb_clnt is accessed concurrently by multiple threads but there is no locking around CLNT_CALL.  If multiple threads perform CLNT_CALL simultaneously, they may corrupt the CLIENT structure or interfere with each other's calls, potentially leading to denial\u2011of\u2011service or inconsistent state.  This race in kernel code can be triggered by flooding RPC bind requests.\"\n  }\n]\n```\n",
+  "prompt_tokens": 2108,
+  "completion_tokens": 3180,
+  "total_tokens": 5288,
+  "scan_elapsed": 36.3,
+  "total_elapsed": 37.6,
+  "severities": {
+    "critical": 1,
+    "high": 1,
+    "medium": 1,
+    "low": 0,
+    "informational": 0
+  },
+  "status": "ok",
+  "lines": 170,
+  "chars": 5114,
+  "timestamp": "2026-05-06_173506"
+}
